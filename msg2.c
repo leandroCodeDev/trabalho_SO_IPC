@@ -11,13 +11,7 @@
 #include <pthread.h>
 #include <sys/msg.h>
 
-#define MAX_TEXT 512
-
-struct my_msg_st
-{
-    long int my_msg_type;
-    char some_text[MAX_TEXT];
-};
+#define MAX_TEXT 2048
 
 typedef struct Musica
 {
@@ -25,7 +19,6 @@ typedef struct Musica
     char autor[256];
     char duracao[256];
     char genero[256];
-    long int my_msg_type;
 } Musica;
 int main()
 {
@@ -46,14 +39,8 @@ int main()
     {
         printf("Enter nome: ");
         fgets(buffer, BUFSIZ, stdin);
-        some_data.my_msg_type = 1;
         strcpy(some_data.nome, buffer);
 
-        if (msgsnd(msgid, (void *)&some_data, MAX_TEXT, 0) == -1)
-        {
-            fprintf(stderr, "msgsnd failed\n");
-            exit(EXIT_FAILURE);
-        }
         if (strncmp(buffer, "end", 3) == 0)
         {
             running = 0;
@@ -63,11 +50,6 @@ int main()
         fgets(buffer, BUFSIZ, stdin);
         strcpy(some_data.autor, buffer);
 
-        if (msgsnd(msgid, (void *)&some_data, MAX_TEXT, 0) == -1)
-        {
-            fprintf(stderr, "msgsnd failed\n");
-            exit(EXIT_FAILURE);
-        }
         if (strncmp(buffer, "end", 3) == 0)
         {
             running = 0;
@@ -75,14 +57,8 @@ int main()
 
         printf("Enter duracao: ");
         fgets(buffer, BUFSIZ, stdin);
-        some_data.my_msg_type = 1;
         strcpy(some_data.duracao, buffer);
 
-        if (msgsnd(msgid, (void *)&some_data, MAX_TEXT, 0) == -1)
-        {
-            fprintf(stderr, "msgsnd failed\n");
-            exit(EXIT_FAILURE);
-        }
         if (strncmp(buffer, "end", 3) == 0)
         {
             running = 0;
@@ -90,7 +66,6 @@ int main()
 
         printf("Enter genero: ");
         fgets(buffer, BUFSIZ, stdin);
-        some_data.my_msg_type = 1;
         strcpy(some_data.genero, buffer);
 
         if (msgsnd(msgid, (void *)&some_data, MAX_TEXT, 0) == -1)
