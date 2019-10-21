@@ -18,7 +18,7 @@
 
 #define MAX_TEXT 2048
 #define NUM_THREADS 3
-#define TAMANHO_ARRAY_MUSICAS 12
+#define TAMANHO_ARRAY_MUSICAS 30
 
 typedef struct Musica
 {
@@ -40,7 +40,27 @@ Musica musicas [] = {
         {.nome = "The sound of silence", .autor = "Simon & Garfunkel", .duracao = "3:05", .genero = "Pop"},
         {.nome = "The sound of silence - Disturbed", .autor = "Disturbed", .duracao = "4:08", .genero = "Metal"},
         {.nome = "I Am Rock", .autor = "Rock", .duracao = "3:50", .genero = "Rock"},
-        {.nome = "Valentino", .autor = "24KGoldn", .duracao = "2:59", .genero = "Hip-Hop"}
+        {.nome = "Valentino", .autor = "24KGoldn", .duracao = "2:59", .genero = "Hip-Hop"},
+        {.nome = "You win Again", .autor = "Bee Gees", .duracao = "4:01", .genero = "Classica"},
+        {.nome = "Listen to your Heart", .autor = "Roxette", .duracao = "5:28", .genero = "Pop"},
+        {.nome = "My Sweet Lord", .autor = "George Harrison", .duracao = "4:41", .genero = "Country"},
+        {.nome = "Super Trouper", .autor = "Abba", .duracao = "4:12", .genero = "Pop"},
+        {.nome = "I Have A Dream", .autor = "Abba", .duracao = "4:45", .genero = "Pop"},
+        {.nome = "Pais e Filhos", .autor = "Legiao Urbana", .duracao = "5:08", .genero = "MPB"},
+        {.nome = "I hate u, i lovoe u", .autor = "Olivia O'Brien", .duracao = "4:11", .genero = "Pop"},
+        {.nome = "GoodByes", .autor = "Post Malone", .duracao = "2:54", .genero = "Hip-Hop"},
+        {.nome = "Drip Different", .autor = "Ebon Lurks", .duracao = "3:18", .genero = "Hip-Hop"},
+        {.nome = "Haruka Kanata", .autor = "Asisan Kung-fu generation", .duracao = "4:03", .genero = "Rock"},
+        {.nome = "Silhouette", .autor = "Kana-Boon", .duracao = "4:00", .genero = "Pop"},
+        {.nome = "I Feel It Coming", .autor = "The Weekend", .duracao = "4:29", .genero = "Pop"},
+        {.nome = "Starboy", .autor = "The Weekend", .duracao = "3:50", .genero = "Pop"},
+        {.nome = "Violent Pornography", .autor = "System Of A Down", .duracao = "3:31", .genero = "Rock Alternativo"},
+        {.nome = "Send Me An Angel", .autor = "Scorpions", .duracao = "4:33", .genero = "Rock Classico"},
+        {.nome = "Tonight Tonight", .autor = "Hot Chelle Rae", .duracao = "3:20", .genero = "Pop"},
+        {.nome = "Ave Maria", .autor = "Luciano Pavarotti", .duracao = "4:56", .genero = "Classica"},
+        {.nome = "I Will Find", .autor = "Vintage Culture", .duracao = "3:44", .genero = "Eletronica"},
+        {.nome = "Forever", .autor = "HaroinFather", .duracao = "1:48", .genero = "India"},
+        {.nome = "The Less I Know The Better", .autor = "Tame Impala", .duracao = "3:36", .genero = "Pop"}
     };
 
 void *thread_function(void *arg);
