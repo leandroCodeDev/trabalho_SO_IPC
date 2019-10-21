@@ -93,7 +93,7 @@ void *thread_function(void *arg) {
     {
         int indexMusica = rand() % TAMANHO_ARRAY_MUSICAS;
         
-        printf("Thread %d produziu a musica no index %d de nome %d\n", my_number, indexMusica, musicas[indexMusica].nome);
+        printf("Thread %d produziu a musica no index %d de nome %s\n", my_number, indexMusica, musicas[indexMusica].nome);
 
         if (msgsnd(msgid, (void *)&musicas[indexMusica], MAX_TEXT, 0) == -1)
         {
