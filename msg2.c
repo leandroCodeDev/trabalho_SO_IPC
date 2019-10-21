@@ -3,6 +3,11 @@
  queue delete and make the following changes to the running loop.
  We now have a call to msgsnd to send the entered text to the queue. */
 
+
+
+// COMPILE COM:      gcc -pthread -o msg2 msg2.c
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -12,6 +17,8 @@
 #include <sys/msg.h>
 
 #define MAX_TEXT 2048
+#define NUM_THREADS 3
+#define TAMANHO_ARRAY_MUSICAS 12
 
 typedef struct Musica
 {
@@ -20,64 +27,83 @@ typedef struct Musica
     char duracao[256];
     char genero[256];
 } Musica;
+
+Musica musicas [] = {
+        {.nome = "Dessert", .autor = "Darwin", .duracao = "3:30", .genero = "POP"},
+        {.nome = "O Astronauta de Marmore", .autor = "Nenhum de nos", .duracao = "3:59", .genero = "MPB"},
+        {.nome = "Give It All", .autor = "Rise Against", .duracao = "2:50", .genero = "Indie"},
+        {.nome = "Should I Stay or Should I Go", .autor = "The Clash", .duracao = "3:08", .genero = "Rock"},
+        {.nome = "Carry on Wayward Son", .autor = "Kansas", .duracao = "5:23", .genero = "Rock"},
+        {.nome = "Piano Man", .autor = "Billy Joel", .duracao = "5:39", .genero = "Soft Rock"},
+        {.nome = "The House of the Rising Sun", .autor = "The Animals", .duracao = "4:29", .genero = "Folk Rock"},
+        {.nome = "Let it Be", .autor = "The Beatles", .duracao = "4:03", .genero = "Rock"},
+        {.nome = "The sound of silence", .autor = "Simon & Garfunkel", .duracao = "3:05", .genero = "Pop"},
+        {.nome = "The sound of silence - Disturbed", .autor = "Disturbed", .duracao = "4:08", .genero = "Metal"},
+        {.nome = "I Am Rock", .autor = "Rock", .duracao = "3:50", .genero = "Rock"},
+        {.nome = "Valentino", .autor = "24KGoldn", .duracao = "2:59", .genero = "Hip-Hop"}
+    };
+
+void *thread_function(void *arg);
+
 int main()
 {
-    int running = 1;
-    struct Musica some_data;
+    int res;
+    pthread_t a_thread[NUM_THREADS];
+    void *thread_result;
+    int lots_of_threads;
+
+    for(lots_of_threads = 0; lots_of_threads < NUM_THREADS; lots_of_threads++) {
+        res = pthread_create(&(a_thread[lots_of_threads]), NULL, thread_function, (void *)&lots_of_threads);
+        if (res != 0) {
+            perror("Criacao de Thread falhou");
+            exit(EXIT_FAILURE);
+        }
+        sleep(1);
+    }
+    printf("Esperando por thread finalizar...\n");
+
+    for(lots_of_threads = NUM_THREADS - 1; lots_of_threads >= 0; lots_of_threads--) {
+        res = pthread_join(a_thread[lots_of_threads], &thread_result);
+        if (res == 0) {
+            printf("Pegou uma thread\n");
+        } else {
+            perror("Thread falhou no join");
+        }
+    }
+    printf("Todas terminaram\n");
+
+    exit(EXIT_SUCCESS);
+}
+
+
+
+void *thread_function(void *arg) {
+    int my_number = *(int *)arg;
     int msgid;
-    char buffer[BUFSIZ];
 
     msgid = msgget((key_t)1234, 0666 | IPC_CREAT);
 
     if (msgid == -1)
     {
-        fprintf(stderr, "msgget failed with error: %d\n", errno);
-        exit(EXIT_FAILURE);
+        fprintf(stderr, "msgget falhou na thread %d with error: %d\n", my_number, errno);
+        pthread_exit(NULL);
     }
 
-    while (running)
+    while (1)
     {
-        printf("Enter nome: ");
-        fgets(buffer, BUFSIZ, stdin);
-        strcpy(some_data.nome, buffer);
+        int indexMusica = rand() % TAMANHO_ARRAY_MUSICAS;
+        
+        printf("Thread %d produziu a musica no index %d de nome %d\n", my_number, indexMusica, musicas[indexMusica].nome);
 
-        if (strncmp(buffer, "end", 3) == 0)
-        {
-            running = 0;
-        }
-
-        printf("Enter autor: ");
-        fgets(buffer, BUFSIZ, stdin);
-        strcpy(some_data.autor, buffer);
-
-        if (strncmp(buffer, "end", 3) == 0)
-        {
-            running = 0;
-        }
-
-        printf("Enter duracao: ");
-        fgets(buffer, BUFSIZ, stdin);
-        strcpy(some_data.duracao, buffer);
-
-        if (strncmp(buffer, "end", 3) == 0)
-        {
-            running = 0;
-        }
-
-        printf("Enter genero: ");
-        fgets(buffer, BUFSIZ, stdin);
-        strcpy(some_data.genero, buffer);
-
-        if (msgsnd(msgid, (void *)&some_data, MAX_TEXT, 0) == -1)
+        if (msgsnd(msgid, (void *)&musicas[indexMusica], MAX_TEXT, 0) == -1)
         {
             fprintf(stderr, "msgsnd failed\n");
             exit(EXIT_FAILURE);
         }
-        if (strncmp(buffer, "end", 3) == 0)
-        {
-            running = 0;
-        }
+
+        sleep(5);
+        
     }
 
-    exit(EXIT_SUCCESS);
+    pthread_exit(NULL);
 }

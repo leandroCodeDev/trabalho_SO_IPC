@@ -46,14 +46,16 @@ typedef struct Musica
     char genero[256];
 } Musica;
 
+//verificar se a fila ta bloqueante ou n~ao
 int main()
 {
+
+    
+
     int running = 1;
     int msgid;
     struct Musica some_data;
     long int msg_to_receive = 0;
-
-    /* First, we set up the message queue. */
 
     msgid = msgget((key_t)1234, 0666 | IPC_CREAT);
 
@@ -66,6 +68,7 @@ int main()
     /* Then the messages are retrieved from the queue, until an end message is encountered.
  Lastly, the message queue is deleted. */
 
+
     while (running)
     {
         if (msgrcv(msgid, (void *)&some_data, BUFSIZ,
@@ -74,6 +77,7 @@ int main()
             fprintf(stderr, "msgrcv failed with error: %d\n", errno);
             exit(EXIT_FAILURE);
         }
+        printf("======================================\n");
         printf("Voce esta escutante: \n");
         printf("Musica: %s \n", some_data.nome);
         printf("Autor: %s \n", some_data.autor);
